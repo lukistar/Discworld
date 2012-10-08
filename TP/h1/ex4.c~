@@ -1,0 +1,31 @@
+/* 4. Да се разработи програма, която изисква от потребителя да въведе две целочислени числа, x и y, където x < y. Да се намерят и изведат всички числа на Фибоначи в интервала [x, y]. */
+/* Written on "C" */
+/* Krasimir Stoikov, 11b */
+
+#include<stdio.h>
+
+int main()
+{
+	int xx = 0;
+	int yy = 0;
+	printf("Vuvedete x\n");
+	scanf("%d", &xx);
+	do
+	{
+	printf("Vuvedete y, koeto da e po-golqmo ot x\n");
+	scanf("%d", &yy);
+	}
+	while (yy<=xx);
+	printf("Chislata na Fibonachi v intervala [x,y] sa:\n");
+	int cont1 = 1;
+	int cont2 = 1; 
+	while (cont2<=yy)
+	{
+		if ((xx <= 1)&&(cont2 == 1)) printf("1\n");
+		if ((cont2>=xx)&&(cont2<=yy)) printf("%d\n", cont2);
+		cont2 += cont1;
+		cont1 = cont2-cont1;
+	}
+
+return 0;
+}
