@@ -1,4 +1,10 @@
 #!/usr/local/bin/python
+#school - ТУЕС
+#class - 11Б
+#num - 20
+#name - Красимир Светославов Стойков
+#task - Да се съберат числата от шестата колона във csv файл
+
 
 def is_number(s):
     try:
