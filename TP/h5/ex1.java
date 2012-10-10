@@ -10,34 +10,30 @@
 down изходът трябва да е сортиран в низходящ ред. Стойността по подразбиране, ако не е
 посочено up или down, е up.
 */
+
+
+import java.util.*;
+import java.util.Arrays;
 public class ex1 {
 
 	public static void main(String[] argc) {
-		int size = argc.length;
-		String[] in_argc = new String[size];
-		in_argc = argc;
-		String[] out_argc = new String[size];
+		boolean check = false;
+		Vector<String> in_argc = new Vector<String>();
 		int count = 0;
-		for (String str:in_argc) {
+		for (String str : argc) {
 			if (System.getProperty(str) != null) {
-				out_argc[count] = System.getProperty(str);
+				in_argc.add(System.getProperty(str));
 				count++;
 			}
 		}
-		if (in_argc[size-1].equals("down")) {
-			for (int count2 = count-1; count2 >= 0; count2--) {
-				System.out.println(out_argc[count2]);
-			}
-		}
-		else {
-			for (int count2 = 0; count2 < count; count2++) {
-                                System.out.println(out_argc[count2]);
-			}
+		if (argc[argc.length-1].equals("down")) check = true;
+		String[] out = new String[in_argc.size()];
+		in_argc.toArray(out);
+		if (check == false) Arrays.sort(out);
+		else Arrays.sort(out, Collections.reverseOrder());
+		for (String str2 : out) {
+			System.out.println(str2);
 		}
 	}
-
-
-
-
 
 }
