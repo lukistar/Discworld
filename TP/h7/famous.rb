@@ -5,15 +5,30 @@
 #task - Програма за намиране на най-много споменатото число(номер на ученик) в група от csv файлове
 require 'csv'
 lists = Dir.glob("*.csv")
-Array.new number = Array.new(29){0}
+Array.new number = Array.new(30){0}
+Array.new taken = Array.new(30){Array.new(30){0}}
+br = 0
+z = 0
 for list_ in lists
-	
-	CSV.foreach(list_) do |row|
-		for num in row
-			if (num.to_i > 0)
-				number[num.to_i-1] = number[num.to_i-1].to_i + 1
-			end
+	check_ = false
+	for check in 1..9
+		check_ = list_[1].eql?check.to_s
+		if (check_)
+			break
 		end
+	end
+	if (check_ == true)
+		last_number = list_[0].to_i + list_[1].to_i
+	else
+		last_number = list_[0].to_i
+	end
+	CSV.foreach(list_) do |num| 
+			if (num[0].to_i > 0)
+				number[num[0].to_i-1] = number[num[0].to_i-1].to_i + 1
+				taken[num[0].to_i-1][last_number.to_i] = taken[num[0].to_i-1][last_number.to_i].to_i
+				taken[num[0].to_i-1][last_number.to_i]+=1
+				last_number = num[0].to_i-1
+			end
 	end
 	
 end
@@ -44,3 +59,28 @@ for n3 in 0..29
 	end
 end
 print "\n"
+Array.new maxxx = Array.new(30){0}
+for h1 in 0..29
+	maxxx[h1] = taken[h1][0]
+	for h2 in 1..29
+		if (maxxx[h1] < taken[h1][h2]) 
+			maxxx[h1] = taken[h1][h2]
+		end
+	end
+end
+Array.new maxxx_ = Array.new(30){Array.new(1){0}}
+for b1 in 0..29
+	z = 0
+	for b2 in 0..29
+		if (taken[b1][b2] == maxxx[b1])
+			maxxx_[b1][z] = b2+1
+			z+=1
+		end
+	end
+end
+print "Ot koi chovek vseki e pulichil lista si nai-mnogo: \n"
+for g in 0..29
+	print "number" + (g+1).to_s + " from: "
+	print maxxx_[g]
+	print "\n"
+end
