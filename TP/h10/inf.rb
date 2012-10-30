@@ -4,7 +4,7 @@
 #class - 11Б
 #num - 20
 #name - Красимир Светославов Стойков
-#task - Програма за обработка на разностранна информация от множество csv файлове.
+#task - Програма за обработка на "полу-структурирана" информация от множество подобни по вид и предназначение csv файлове. Поначало са известни някои от колонките на файловете. Използвана е информация, която не присъства във файловете.
 
 require 'csv'
 require 'time'
@@ -126,8 +126,11 @@ count = 0
 count_sent = 0
 Array.new students = Array.new
 lists = Dir.glob("*.csv")
+lists = lists.reverse
+#Getting information:
 for list in lists
 	count = 0
+	print list, "\n"
 	CSV.foreach(list) do |row|
 		if (count == 0)
 		
@@ -161,6 +164,7 @@ for list in lists
 	end
 end
 
+#Setting latin-bulgarian translation:
 lat_bul1 = { "zh"=>"ж", "ch"=>"ч", "sh"=>"ш", "sht"=>"щ", "yu"=>"ю", "ju"=>"ю", "ja"=>"я", "ya"=>"я" }
 lat_bul2 = { "Zh"=>"Ж", "Ch"=>"Ч", "Sh"=>"Ш", "Sht"=>"Щ", "Yu"=>"Ю", "Ju"=>"Ю", "Ja"=>"Я", "Ya"=>"Я" }
 lat_bul3 = { 
@@ -217,12 +221,15 @@ lat_bul4 = {
 		"C" => "Ц",
 		"Q" => "Я" 
 }
-lat_bul_class = {"a" => "А", "b" => "Б", "A" => "Б", "B" => "Б"}
+lat_bul_class = {"a" => "А", "b" => "Б", "A" => "А", "B" => "Б"}
+
+#Deleting useless objects:
 for student in students
 	if (student.g_name == nil)
 		students.delete(student)
 	end
 end
+#Translation:
 for student in students
 	lat_bul_class.each do |key, word|
 		if student.g_grade().include?key
@@ -250,7 +257,7 @@ for student in students
 		end
 	end
 end
-
+#Same go to same:
 size1 = students.size-1
 founded = 0
 size2 = size1
@@ -280,9 +287,7 @@ for i1 in 0..size1
 			end
 			
 		end
-		i2+=1 
 	end
-	i1+=1
 end
 
 
@@ -315,10 +320,8 @@ for i1 in 0..size11
 				end
 			end
 			
-		end
-		i2+=1 
+		end 
 	end
-	i1+=1
 end
 
 size111 = students.size-1
@@ -344,11 +347,10 @@ for i1 in 0..size111
 			end
 			
 		end
-		i2+=1 
 	end
-	i1+=1
 end
 
+#Setting up student's classes:
 for student in students
 	if (student.g_grade.include?"b" or student.g_grade.include?"B" or student.g_grade.force_encoding("UTF-8").include?"б" or student.g_grade.force_encoding("UTF-8").include?"Б")
 		student.s_grade("11Б".force_encoding("UTF-8"))
@@ -357,18 +359,29 @@ for student in students
 		student.s_grade("11А".force_encoding("UTF-8"))
 	end
 end
+#Sorting:
 for student in students
 	student.g_homeworks.sort_by! {|x| [x.g_number, x.g_sent_date] }
 end
 students = students.sort_by { |x| [x.g_grade, x.g_number.to_i, x.g_name] }
+
+#Writing in an output file:
 CSV.open('output_file.csv', 'w') do |writer|
 	for student in students
 		if student.g_email != nil
-		writer << [student.g_grade.force_encoding("UTF-8"), student.g_number.force_encoding("UTF-8"), student.g_name.force_encoding("UTF-8"), student.g_email.force_encoding("UTF-8"), student.g_belt.force_encoding("UTF-8")]
-		for ggg in 0..student.g_homeworks.size-1
-			temp = student.g_homeworks[ggg]
-			writer << [temp.g_number.force_encoding("UTF-8"), temp.g_name, temp.g_last_date, temp.g_sent_date, temp.g_on_time, temp.g_link]
-		end
+			writer << [student.g_grade.force_encoding("UTF-8"), student.g_number.force_encoding("UTF-8"), student.g_name.force_encoding("UTF-8"), student.g_email.force_encoding("UTF-8"), student.g_belt.force_encoding("UTF-8")]
+			for ggg in 0..student.g_homeworks.size-1
+				temp = student.g_homeworks[ggg]
+				ontime_ = "Не се знае"
+				if temp.g_on_time == true
+					ontime_ = "Да"
+				else
+					ontime_ = "Не"
+				end
+				writer << [temp.g_number.force_encoding("UTF-8"), temp.g_name, temp.g_last_date, temp.g_sent_date, ontime_, temp.g_link]
+			end
+			writer << ["-"]
+			writer << []
 		end
 	end
 end
