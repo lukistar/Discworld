@@ -1,0 +1,10 @@
+class Ob
+	attr_accessor: value
+	def method
+		p "..."
+	end
+end
+o = Ob.new
+p o.value
+o.value = 10
+p o.value
