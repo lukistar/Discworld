@@ -5,35 +5,61 @@
 #task - Калкулатор с обратен полски запис
 
 class String
-  def is_integer?
-    self.to_i.to_s == self
-  end
-  def is_operator?
-  	self.eql?"+" or self.eql?"-" or self.eql?"*" or self.eql?"/"
-  end
+	def is_number?
+    	self.to_i.to_s == self
+  	end
+  	def is_operator?
+  		self.eql?"+" or self.eql?"-" or self.eql?"*" or self.eql?"/" or self.eql?"%" or self.eql?"**"
+  	end
 end
-Array numbers = Array.new()
-input = gets
-input = input.split(" ")
-count = 0
-for index in 0..input.size-1
-	if input[index].is_integer?
-			numbers[count] = input[index].to_i
-			count+=1
-	elsif input[index].is_operator?
-			result = 0
-			if input[index].eql?"+"
-				result = numbers[0] + numbers[1]
-			elsif input[index].eql?"-"
-				result = numbers[0] - numbers[1]
-			elsif input[index].eql?"*"
-				result = numbers[0] * numbers[1]
-			elsif input[index].eql?"/"
-				result = numbers[0] / numbers[1]
+def Cal
+	puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+	puts "@@@ Using only numbers, spaces and operators works @@@"
+	puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+	input = gets
+	input = input.split(" ")
+	Array numbers = Array.new()
+	for symbol in input
+		if (symbol.is_number?)
+			numbers.push(symbol.to_f)
+		elsif (symbol.is_operator?)
+			if (input.size > 1)
+				if symbol.eql?"+"
+					result = numbers.pop() + numbers.pop()
+					numbers.push(result)				
+				elsif symbol.eql?"-"
+					result = -numbers.pop() + numbers.pop()
+					numbers.push(result)
+				elsif symbol.eql?"*"
+					result = numbers.pop() * numbers.pop()
+					numbers.push(result)
+				elsif symbol.eql?"/"
+					num1 = numbers.pop()
+					result = numbers.pop() / num1
+					numbers.push(result)
+				elsif symbol.eql?"%"
+					num1 = numbers.pop()
+					result = numbers.pop() % num1
+					numbers.push(result)
+				elsif symbol.eql?"**"
+					num1 = numbers.pop()
+					result = numbers.pop() ** num1
+					numbers.push(result)
+				end
+			else
+				puts "ERROR! Suggestion: Type first two numbers and then some operator. Put space after every symbol"
+				break;	
 			end
-			count = 1
-			numbers.clear
-			numbers[0] = result
+		else
+			puts "ERROR! Suggestion: Use only numbers, spaces and operators."
+			break; 
+		end
 	end
+	puts numbers[0]
 end
-print numbers[0]
+check = ""
+while (!check.eql?"exit")
+	Cal()
+	puts "If you want to exit type 'exit'. If you want to continue using the program press enter."
+	check = gets.chomp
+end
